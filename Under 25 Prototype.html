@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Under 25 Bumble-Style App</title>
+  <style>
+    body {
+      margin: 0;
+      background: #fff4d9;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      transition: background 0.3s ease;
+    }
+    .card {
+      background: white;
+      border: 2px solid #ffd166;
+      border-radius: 30px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      padding: 1.5rem;
+      text-align: center;
+      width: 300px;
+      margin-bottom: 1rem;
+      transition: transform 0.4s ease, opacity 0.4s ease;
+    }
+    .hidden { display: none; }
+    .profile-pic {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 4px solid #ffd166;
+      margin-bottom: 1rem;
+      object-fit: cover;
+    }
+    .logo { width: 60px; height: 60px; margin-bottom: 1rem; }
+    .name { font-size: 1.4rem; font-weight: bold; color: #333; }
+    .bio { font-size: 1rem; color: #555; margin-bottom: 0.5rem; }
+    .username { font-size: 1.2rem; font-weight: bold; color: #333; margin-top: 0.3rem; }
+    .tag {
+      background: #fff4d9;
+      border: 1px solid #ffd166;
+      border-radius: 12px;
+      padding: 0.2rem 0.6rem;
+      font-size: 0.8rem;
+      color: #333;
+    }
+    .actions { display: flex; justify-content: center; gap: 1rem; margin-top: 1rem; }
+    .btn-like, .btn-dislike {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+    .btn-like { background: #ffd166; color: #333; }
+    .btn-dislike { background: #333; color: white; }
+    .btn-like:hover, .btn-dislike:hover { transform: scale(1.1); }
+    .cta-btn {
+      display: inline-block;
+      background: linear-gradient(to right, #ffd166, #ffb703);
+      color: white;
+      font-weight: bold;
+      padding: 0.8rem 1.5rem;
+      border-radius: 25px;
+      text-decoration: none;
+      margin-top: 1rem;
+      transition: background 0.3s ease;
+      cursor: pointer;
+    }
+    .cta-btn:hover { background: linear-gradient(to right, #ffb703, #ffd166); }
+    .nav-bar {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      background: #fff;
+      border-top: 1px solid #ffd166;
+      padding: 0.5rem 0;
+    }
+    .nav-btn { cursor: pointer; font-size: 1.2rem; }
+    .leaderboard-card {
+      background: linear-gradient(135deg, #fff4d9, #ffeaa7);
+      margin-bottom: 1rem;
+      padding: 1rem;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      position: relative;
+    }
+    .trending-badge {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      background: #ff6b6b;
+      color: white;
+      font-size: 0.7rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 10px;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.1); opacity: 0.8; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Home Screen -->
+  <div class="card" id="homeScreen">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAMAAABC4vDmAAAAYFBMVEUAAAD////5+flhYWF1dXXt7e0xMTHj4+NHR0fy8vL8/Py8vLzp6elTU1MsLCz19fXY2Ni0tLRsbGyVlZWlpaVOTk7IyMg6OjonJyfS0tIWFhaDg4OKiooNDQ0dHR" class="logo" />
+    <h2 class="name">Welcome to Under 25</h2>
+    <p class="bio">Find your vibe, swipe your tribe ❤️</p>
+    <div class="cta-btn" onclick="openExplore()">Explore Profiles</div>
+    <div class="cta-btn" onclick="openLeaderboard()">Leaderboard</div>
+    <div class="cta-btn" onclick="openSettings()">Settings</div>
+    <h3 style="margin-top:1rem;">🔥 Trending Creators</h3>
+    <div style="display:flex;justify-content:center;gap:0.5rem;margin-top:0.5rem;">
+      <img src="https://randomuser.me/api/portraits/women/12.jpg" class="profile-pic" style="width:50px;height:50px;">
+      <img src="https://randomuser.me/api/portraits/men/55.jpg" class="profile-pic" style="width:50px;height:50px;">
+      <img src="https://randomuser.me/api/portraits/women/31.jpg" class="profile-pic" style="width:50px;height:50px;">
+    </div>
+  </div>
+
+  <!-- Leaderboard -->
+  <div id="leaderboardScreen" class="hidden">
+    <h2 class="name">🏆 Top Creators</h2>
+    <div class="leaderboard-card"><span class="trending-badge">🔥 Trending</span><img src="https://randomuser.me/api/portraits/men/22.jpg" class="profile-pic"><p class="name">Arjun, 24</p><p class="bio">Adventure Seeker | Solo Traveler ✈️</p><p>12.5k followers</p></div>
+    <div class="leaderboard-card"><span class="trending-badge">🔥 Trending</span><img src="https://randomuser.me/api/portraits/women/52.jpg" class="profile-pic"><p class="name">Sneha, 21</p><p class="bio">Painter 🎨 | Loves Poetry ✒️</p><p>10.1k followers</p></div>
+    <div class="leaderboard-card"><span class="trending-badge">🔥 Trending</span><img src="https://randomuser.me/api/portraits/men/64.jpg" class="profile-pic"><p class="name">Vikram, 23</p><p class="bio">Tech Geek 💻 | Gamer 🎮</p><p>9.8k followers</p></div>
+    <div class="leaderboard-card"><img src="https://randomuser.me/api/portraits/women/14.jpg" class="profile-pic"><p class="name">Isha, 22</p><p class="bio">Dancer 💃 | Fashionista 👗</p><p>8.3k followers</p></div>
+  </div>
+
+  <!-- Explore (Swipe Profiles) -->
+  <div id="exploreScreen" class="hidden">
+    <h2 class="name">Explore Profiles</h2>
+    <div id="profiles"></div>
+  </div>
+
+  <!-- Settings -->
+  <div id="settingsScreen" class="hidden card">
+    <h2 class="name">Settings</h2>
+    <p class="bio">✏ Edit Profile</p>
+    <p class="bio">🔔 Notifications</p>
+    <p class="bio">🚫 Block User</p>
+    <p class="bio">⚠ Report</p>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <div class="nav-bar">
+    <div class="nav-btn" onclick="showScreen('homeScreen')">🏠</div>
+    <div class="nav-btn" onclick="openExplore()">🔍</div>
+    <div class="nav-btn" onclick="openLeaderboard()">🏆</div>
+    <div class="nav-btn" onclick="openSettings()">⚙️</div>
+  </div>
+
+  <script>
+    const profileData = [
+      {name: "Alex", age: 22, bio: "Music addict & traveler 🌍", img: "https://randomuser.me/api/portraits/men/32.jpg"},
+      {name: "Aman", age: 22, bio: "Foodie 🍕 | Loves sunsets 🌅", img: "https://randomuser.me/api/portraits/men/10.jpg"},
+      {name: "Sara", age: 21, bio: "Foodie 🍜 | Loves cool 🎸", img: "https://randomuser.me/api/portraits/women/68.jpg"},
+      {name: "Neha", age: 23, bio: "Bookworm 📚 | Coffee lover ☕", img: "https://randomuser.me/api/portraits/women/12.jpg"}
+    ];
+
+    let currentIndex = 0;
+
+    function renderProfiles() {
+      const container = document.getElementById('profiles');
+      container.innerHTML = '';
+      profileData.forEach((p, i) => {
+        const card = document.createElement('div');
+        card.className = `card profile ${i === 0 ? '' : 'hidden'}`;
+        card.id = `profile${i}`;
+        card.innerHTML = `
+          <span class="tag" style="position:absolute;left:10px;top:10px;background:#ff6b6b;color:white;">${i < 2 ? '🔥 Trending Now' : ''}</span>
+          <img src="${p.img}" alt="${p.name}" class="profile-pic" />
+          <p class="name">${p.name}, ${p.age}</p>
+          <p class="bio">${p.bio}</p>
+          <div class="actions">
+            <div class="btn-like" onclick="likeProfile('profile${i}')">❤</div>
+            <div class="btn-dislike" onclick="dislikeProfile('profile${i}')">❌</div>
+          </div>`;
+        container.appendChild(card);
+      });
+    }
+
+    function showScreen(id) {
+      document.querySelectorAll('#homeScreen, #leaderboardScreen, #exploreScreen, #settingsScreen').forEach(el => el.classList.add('hidden'));
+      document.getElementById(id).classList.remove('hidden');
+    }
+
+    function openExplore() { showScreen('exploreScreen'); renderProfiles(); }
+    function openLeaderboard() { showScreen('leaderboardScreen'); }
+    function openSettings() { showScreen('settingsScreen'); }
+
+    function showNextProfile() {
+      if (currentIndex < profileData.length - 1) {
+        document.getElementById(`profile${currentIndex}`).classList.add('hidden');
+        currentIndex++;
+        document.getElementById(`profile${currentIndex}`).classList.remove('hidden');
+      } else {
+        alert('🎉 You have seen all 10,000+ creators!');
+      }
+    }
+
+    function likeProfile(id) {
+      const card = document.getElementById(id);
+      card.style.transform = 'translateX(150%) rotate(15deg)';
+      card.style.opacity = '0';
+      setTimeout(() => { showNextProfile(); card.style.transform = ''; card.style.opacity = '1'; }, 400);
+    }
+
+    function dislikeProfile(id) {
+      const card = document.getElementById(id);
+      card.style.transform = 'translateX(-150%) rotate(-15deg)';
+      card.style.opacity = '0';
+      setTimeout(() => { showNextProfile(); card.style.transform = ''; card.style.opacity = '1'; }, 400);
+    }
+  </script>
+</body>
+</html>
